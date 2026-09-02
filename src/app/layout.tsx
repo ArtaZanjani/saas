@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import  ThemeProvider  from "@/components/providers/themeProvider";
 import Authentication from "@/components/organisms/Authentication";
 import { verifyUser } from "@/actions/auth";
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   icons: {
@@ -39,6 +40,7 @@ const Layout = async ({ children }: LayoutProps<"/">) => {
   const userData = await verifyUser();
   const isLoggedIn = !!userData?.user;
   return (
+
     <html lang="fa" dir="rtl" className={vazirMatn.className} suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
@@ -54,6 +56,8 @@ const Layout = async ({ children }: LayoutProps<"/">) => {
             <Toaster richColors position="top-center" />
           </ShellLayout>
         </ThemeProvider>
+
+        <Analytics />
       </body>
     </html>
   );
