@@ -8,8 +8,8 @@
     "db:push": "pnpm prisma db push && pnpm prisma generate",
     "pre": "pnpm run docker:up && until docker exec saas-postgres pg_isready -U postgres -d saas; do sleep 1; done && pnpm run db:push",
     "dev": "pnpm run pre && next dev",
-    "build": "pnpm run generate:key && pnpm run db:push && next build",
-    "start": "next start",
+    "build": "pnpm run generate:key && pnpm run db:push && next build && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/",
+    "start": "node .next/standalone/server.js",
     "lint": "eslint && knip"
   },
   "allowScripts": {
