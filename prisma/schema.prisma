@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum OrderStatus {
+  NEW
+  PAID
+  SHIPPED
+  DELIVERED
+}
+
+enum SubscriptionPlan {
+  FREE
+  PRO
+  EXPIRED
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum BillingInterval {
+  MONTHLY
+  YEARLY
+}
+
+enum PaymentStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model Store {
+  id                 String           @id @default(cuid())
+  name               String
+  instagramHandle    String           @unique
+  subscriptionPlan   SubscriptionPlan @default(FREE)
+  subscriptionEndsAt DateTime
+  cardNumber         String?
+  cardOwnerName      String?
+  iban               String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  users              User[]
+  orders             Order[]
+}
+
+model User {
+  id           String    @id @default(cuid())
+  storeId      String
+  name         String
+  phoneNumber  String
+  role         UserRole  @default(USER)
+  refreshToken String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  store        Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  products     Product[]
+
+  @@unique([storeId, phoneNumber])
+  @@index([phoneNumber])
+  @@index([storeId, name])
+}
+
+model Product {
+  id          String @id @default(cuid())
+  userId      String // فیلد کلید خارجی برای اتصال به کاربر
+  productName String
+  price       Int
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  storeId     String
+  status      OrderStatus @default(NEW)
+  note        String?
+  products    Json
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  store       Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  address     String
+  userName    String
+  phoneNumber String
+
+  @@index([storeId, status, createdAt])
+}
+
+model Payment {
+  id            String          @id @default(cuid())
+  storeId       String
+  src           String
+  interval      BillingInterval
+  paymentStatus PaymentStatus   @default(PENDING)
+  createdAt     DateTime        @default(now())
+}

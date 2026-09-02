@@ -1,0 +1,6 @@
+{
+  "tags": ["-lintignore"],
+  "ignore": ["src/components/ui/**"],
+  "ignoreDependencies": ["pg", "@types/pg", "@prisma/client"],
+  "ignoreBinaries": ["openssl"]
+}
