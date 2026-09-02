@@ -21,6 +21,10 @@ export const metadata: Metadata = {
     title: "سفارش‌یار",
     statusBarStyle: "default",
   },
+
+  verification: {
+    google: "DRGcHs3vuGBkkxDf1m0tb49fjtp76zOIYtVh8e0pGUw",
+  },
 };
 
 export const viewport: Viewport = {
